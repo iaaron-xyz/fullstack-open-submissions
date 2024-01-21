@@ -1,6 +1,28 @@
 import { useState } from "react";
 import "./index.css";
 
+const Statistics = ({ good, neutral, bad, total, all }) => {
+  if (all === 0) {
+    return (
+      <section>
+        <h2>Statistics</h2>
+        <p>No feedback given</p>
+      </section>
+    );
+  }
+  return (
+    <section>
+      <h2>Statistics</h2>
+      <p>Good: {good}</p>
+      <p>Neutral: {neutral}</p>
+      <p>Bad: {bad}</p>
+      <p>All: {good + neutral + bad}</p>
+      <p>Average: {total / all}</p>
+      <p>Positive: {(good / all) * 100}</p>
+    </section>
+  );
+};
+
 const App = () => {
   // save clicks of each button to its own state
   const [good, setGood] = useState(0);
@@ -37,15 +59,13 @@ const App = () => {
       </section>
 
       {/* Statistics */}
-      <section>
-        <h2>Statistics</h2>
-        <p>Good: {good}</p>
-        <p>Neutral: {neutral}</p>
-        <p>Bad: {bad}</p>
-        <p>All: {good + neutral + bad}</p>
-        <p>Average: {total / all}</p>
-        <p>Positive: {(good / all) * 100}</p>
-      </section>
+      <Statistics
+        good={good}
+        neutral={neutral}
+        bad={bad}
+        total={total}
+        all={all}
+      />
     </main>
   );
 };
