@@ -17,7 +17,11 @@ const App = () => {
 
   // Generate a random integer between 0 and n (excluding n)
   const randomInt = (n) => Math.floor(Math.random() * n);
-  console.log(selected);
+
+  const mostVotesIndex = votes.indexOf(Math.max(...votes));
+
+  const handleAnecdotesSelection = () =>
+    setSelected(randomInt(anecdotes.length));
 
   const handleVotes = () => {
     const updateVotes = [...votes];
@@ -27,12 +31,16 @@ const App = () => {
 
   return (
     <div>
-      {anecdotes[selected]} <br />
-      Votes: {votes[selected]} <br />
+      {/* Current anecdote */}
+      <h1>Anecdote of the Day</h1>
+      <p>{anecdotes[selected]}</p>
+      <p>has {votes[selected]} votes</p>
       <button onClick={handleVotes}>vote</button>
-      <button onClick={() => setSelected(randomInt(anecdotes.length))}>
-        Next anecdote
-      </button>
+      <button onClick={handleAnecdotesSelection}>next anecdote</button>
+      {/* Most voted anecdote */}
+      <h1>Anecdote with most votes</h1>
+      <p>{anecdotes[mostVotesIndex]}</p>
+      <p>has {votes[mostVotesIndex]} votes</p>
     </div>
   );
 };
