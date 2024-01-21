@@ -7,7 +7,47 @@ const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
-  return <div>code here</div>;
+  // total score
+  const [total, setTotal] = useState(0);
+
+  // total number of votes
+  const all = good + neutral + bad;
+
+  // event handlers for feedback buttons
+  const handleBtnGood = () => {
+    setGood(good + 1);
+    setTotal(total + 1);
+  };
+  const handleBtnNeutral = () => {
+    setNeutral(neutral + 1);
+  };
+  const handleBtnBad = () => {
+    setBad(bad + 1);
+    setTotal(total - 1);
+  };
+
+  return (
+    <main>
+      {/* Give feedback */}
+      <section>
+        <h1>Give Feedback</h1>
+        <button onClick={handleBtnGood}>good</button>
+        <button onClick={handleBtnNeutral}>neutral</button>
+        <button onClick={handleBtnBad}>bad</button>
+      </section>
+
+      {/* Statistics */}
+      <section>
+        <h2>Statistics</h2>
+        <p>Good: {good}</p>
+        <p>Neutral: {neutral}</p>
+        <p>Bad: {bad}</p>
+        <p>All: {good + neutral + bad}</p>
+        <p>Average: {total / all}</p>
+        <p>Positive: {(good / all) * 100}</p>
+      </section>
+    </main>
+  );
 };
 
 export default App;
