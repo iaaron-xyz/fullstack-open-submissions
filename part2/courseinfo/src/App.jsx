@@ -1,7 +1,10 @@
 const Header = ({ course }) => <h1>{course}</h1>;
 
-// eslint-disable-next-line no-unused-vars
-const Total = ({ sum }) => <p>Number of exercises {sum}</p>;
+const Total = ({ sum }) => (
+  <p>
+    <strong>Total of {sum} exercises</strong>
+  </p>
+);
 
 const Part = ({ part }) => (
   <p>
@@ -18,10 +21,17 @@ const Content = ({ parts }) => (
 );
 
 const Course = ({ course }) => {
+  const initialValue = 0;
+  const totalExercises = course.parts.reduce(
+    (total, currentValue) => total + currentValue.exercises,
+    initialValue
+  );
+
   return (
     <>
       <Header course={course.name} />
       <Content parts={course.parts} />
+      <Total sum={totalExercises} />
     </>
   );
 };
