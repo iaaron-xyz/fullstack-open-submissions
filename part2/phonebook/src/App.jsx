@@ -1,4 +1,6 @@
 import { useState } from "react";
+import PersonForm from "./components/PersonForm";
+import Persons from "./components/Persons";
 
 const App = () => {
   // data
@@ -33,10 +35,6 @@ const App = () => {
       }
     }
 
-    // test logs
-    console.log(newName);
-    console.log(newNumber);
-
     // add new person info
     setPersons(
       persons.concat({
@@ -55,27 +53,18 @@ const App = () => {
       <h2>Phonebook</h2>
 
       {/* Add a new person */}
-      <form>
-        <div>
-          name: <input onChange={handleInputName} value={newName} />
-        </div>
-        <div>
-          number: <input onChange={handleInputNumber} value={newNumber} />
-        </div>
-        <div>
-          <button type="submit" onClick={handleSubmitInfo}>
-            add
-          </button>
-        </div>
-      </form>
+      <h2>add new</h2>
+      <PersonForm
+        handleName={handleInputName}
+        handleNumber={handleInputNumber}
+        name={newName}
+        number={newNumber}
+        handleButton={handleSubmitInfo}
+      />
 
       {/* Display the list of person's name */}
       <h2>Numbers</h2>
-      {persons.map((person) => (
-        <div key={person.id}>
-          {person.name} {person.number}
-        </div>
-      ))}
+      <Persons persons={persons} />
     </div>
   );
 };
