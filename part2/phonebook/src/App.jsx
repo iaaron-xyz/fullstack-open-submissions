@@ -1,6 +1,7 @@
 import { useState } from "react";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import Filter from "./components/Filter";
 
 const App = () => {
   // data
@@ -14,6 +15,7 @@ const App = () => {
   const [persons, setPersons] = useState(dataPersons);
   const [newName, setNewName] = useState("Julia Test");
   const [newNumber, setNewNumber] = useState("33-3344-4442");
+  const [filterText, setFilterText] = useState("");
 
   const handleInputName = (event) => {
     setNewName(event.target.value);
@@ -21,6 +23,10 @@ const App = () => {
 
   const handleInputNumber = (event) => {
     setNewNumber(event.target.value);
+  };
+
+  const handleFilter = (event) => {
+    setFilterText(event.target.value);
   };
 
   const handleSubmitInfo = (event) => {
@@ -52,6 +58,9 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
 
+      {/* Filter */}
+      <Filter filterText={filterText} handleFilter={handleFilter} />
+
       {/* Add a new person */}
       <h2>add new</h2>
       <PersonForm
@@ -64,7 +73,7 @@ const App = () => {
 
       {/* Display the list of person's name */}
       <h2>Numbers</h2>
-      <Persons persons={persons} />
+      <Persons persons={persons} filterText={filterText} />
     </div>
   );
 };
