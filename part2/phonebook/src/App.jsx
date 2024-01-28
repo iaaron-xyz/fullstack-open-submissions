@@ -11,6 +11,15 @@ const App = () => {
   const handleSubmitName = (event) => {
     // prevent reload page
     event.preventDefault();
+
+    // Check if name already exist
+    for (const obj of persons) {
+      if (obj.name.toLowerCase() === newName.toLowerCase()) {
+        alert(`${newName} is already adde to phonebook`);
+        return;
+      }
+    }
+
     // add new person name
     setPersons(
       persons.concat({
