@@ -1,22 +1,26 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import Filter from "./components/Filter";
 
 const App = () => {
-  // data
-  const dataPersons = [
-    { name: "Arto Hellas", number: "040-123456", id: 1 },
-    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-  ];
-
-  const [persons, setPersons] = useState(dataPersons);
-  const [newName, setNewName] = useState("Julia Test");
+  const [persons, setPersons] = useState([]);
+  const [newName, setNewName] = useState("John Von Newmann");
   const [newNumber, setNewNumber] = useState("33-3344-4442");
   const [filterText, setFilterText] = useState("");
 
+  // fetch data
+  useEffect(() => {
+    console.log("initialize useEffect");
+    axios.get("http://localhost:3001/persons").then((response) => {
+      console.log("Promise fullfilled");
+      setPersons(response.data);
+    });
+  }, []);
+  console.log("Render persons:", persons.length);
+
+  // function handlers
   const handleInputName = (event) => {
     setNewName(event.target.value);
   };
@@ -49,6 +53,7 @@ const App = () => {
         id: persons.length + 1,
       })
     );
+
     // reset previous new name
     setNewName("");
     setNewNumber("");
