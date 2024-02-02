@@ -10,15 +10,12 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("33-3344-4442");
   const [filterText, setFilterText] = useState("");
 
-  // fetch data
+  // fetch initial data
   useEffect(() => {
-    console.log("initialize useEffect");
     axios.get("http://localhost:3001/persons").then((response) => {
-      console.log("Promise fullfilled");
       setPersons(response.data);
     });
   }, []);
-  console.log("Render persons:", persons.length);
 
   // function handlers
   const handleInputName = (event) => {
@@ -45,18 +42,21 @@ const App = () => {
       }
     }
 
-    // add new person info
-    setPersons(
-      persons.concat({
-        name: newName,
-        number: newNumber,
-        id: persons.length + 1,
-      })
-    );
+    // Create new person object
+    const newPersonObject = {
+      name: newName,
+      number: newNumber,
+    };
 
-    // reset previous new name
-    setNewName("");
-    setNewNumber("");
+    // Send new person data to the server
+    axios
+      .post("http://localhost:3001/persons", newPersonObject)
+      .then((response) => {
+        setPersons(persons.concat(response.data));
+        // reset states
+        setNewNumber("");
+        setNewName("");
+      });
   };
 
   return (
