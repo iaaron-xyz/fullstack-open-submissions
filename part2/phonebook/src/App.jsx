@@ -58,6 +58,23 @@ const App = () => {
     });
   };
 
+  // Delete a person from the server
+  const handleDeleteBtnPerson = (id) => {
+    // Delete confirmation
+    const toDeletePerson = persons.find((p) => id === p.id);
+    if (!confirm(`Confirm to delete ${toDeletePerson.name}?`)) {
+      console.log("Deletion aborted");
+      return;
+    }
+
+    // Filter mathching id
+    personService.remove(id).then((deletedPerson) => {
+      const updatedPersonList = persons.filter((p) => p.id !== id);
+      setPersons(updatedPersonList);
+      console.log(`Person with id: ${id} deleted`);
+    });
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -77,7 +94,11 @@ const App = () => {
 
       {/* Display the list of person's name */}
       <h2>Numbers</h2>
-      <Persons persons={persons} filterText={filterText} />
+      <Persons
+        persons={persons}
+        filterText={filterText}
+        handleDelete={handleDeleteBtnPerson}
+      />
     </div>
   );
 };
