@@ -4,8 +4,6 @@ const Persons = ({ persons, filterText }) => {
     person.name.toLowerCase().includes(filterText.toLowerCase())
   );
 
-  console.log(filterText);
-
   return (
     <>
       {filteredPerson.map((person) => (

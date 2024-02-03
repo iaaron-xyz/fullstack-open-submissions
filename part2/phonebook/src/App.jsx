@@ -1,4 +1,4 @@
-import axios from "axios";
+import personService from "./services/persons";
 import { useEffect, useState } from "react";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
@@ -12,8 +12,8 @@ const App = () => {
 
   // fetch initial data
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data);
+    personService.getAll().then((personsFullList) => {
+      setPersons(personsFullList);
     });
   }, []);
 
@@ -30,7 +30,8 @@ const App = () => {
     setFilterText(event.target.value);
   };
 
-  const handleSubmitInfo = (event) => {
+  // Store new person to the backend
+  const handleAddNewPerson = (event) => {
     // prevent reload page
     event.preventDefault();
 
@@ -49,14 +50,12 @@ const App = () => {
     };
 
     // Send new person data to the server
-    axios
-      .post("http://localhost:3001/persons", newPersonObject)
-      .then((response) => {
-        setPersons(persons.concat(response.data));
-        // reset states
-        setNewNumber("");
-        setNewName("");
-      });
+    personService.create(newPersonObject).then((createdPerson) => {
+      setPersons(persons.concat(createdPerson));
+      // reset states
+      setNewNumber("");
+      setNewName("");
+    });
   };
 
   return (
@@ -73,7 +72,7 @@ const App = () => {
         handleNumber={handleInputNumber}
         name={newName}
         number={newNumber}
-        handleButton={handleSubmitInfo}
+        handleButton={handleAddNewPerson}
       />
 
       {/* Display the list of person's name */}
