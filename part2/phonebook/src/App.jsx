@@ -35,10 +35,34 @@ const App = () => {
     // prevent reload page
     event.preventDefault();
 
-    // Check if name already exist
+    // Check if person already exist
     for (const obj of persons) {
+      // user already exist
       if (obj.name.toLowerCase() === newName.toLowerCase()) {
-        alert(`${newName} is already adde to phonebook`);
+        // number is the same
+        if (obj.number === newNumber) {
+          alert(`${newName} is already added to phonebook`);
+          return;
+        }
+
+        // number is different
+        if (
+          confirm(
+            `'${obj.name}' is already added to phonebook. Replace the old number with the new one?`
+          )
+        ) {
+          // create new person object with new number
+          const updatedPersonObject = { ...obj, number: newNumber };
+          // update person data to the backend
+          personService
+            .update(obj.id, updatedPersonObject)
+            .then((returnedPerson) => {
+              setPersons(
+                persons.map((p) => (p.id !== obj.id ? p : returnedPerson))
+              );
+            });
+          console.log(`Number updated: ${newNumber}`);
+        }
         return;
       }
     }
