@@ -3,12 +3,17 @@ import { useEffect, useState } from "react";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import Filter from "./components/Filter";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("John Von Newmann");
   const [newNumber, setNewNumber] = useState("33-3344-4442");
   const [filterText, setFilterText] = useState("");
+  const [notification, setNotification] = useState({
+    type: "",
+    message: "",
+  });
 
   // fetch initial data
   useEffect(() => {
@@ -28,6 +33,18 @@ const App = () => {
 
   const handleFilter = (event) => {
     setFilterText(event.target.value);
+  };
+
+  const sendNotification = (type, message, duration = 5) => {
+    // update notification info
+    setNotification({ type, message });
+    // Remove notification after {duration} seconds
+    setTimeout(() => {
+      setNotification({
+        type: "",
+        message: "",
+      });
+    }, duration * 1000);
   };
 
   // Store new person to the backend
@@ -61,7 +78,14 @@ const App = () => {
                 persons.map((p) => (p.id !== obj.id ? p : returnedPerson))
               );
             });
+          
+          // notification of cange of number successfully
+          sendNotification('success', `Number changed to ${newNumber} succesfully`);
           console.log(`Number updated: ${newNumber}`);
+
+          // reset states
+          setNewName("");
+          setNewNumber("");
         }
         return;
       }
@@ -79,6 +103,9 @@ const App = () => {
       // reset states
       setNewNumber("");
       setNewName("");
+
+      // Send success notification
+      sendNotification("success", `${newPersonObject.name} added succesfully`);
     });
   };
 
@@ -102,6 +129,9 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      {/* Notification */}
+      <Notification notification={notification} />
 
       {/* Filter */}
       <Filter filterText={filterText} handleFilter={handleFilter} />
