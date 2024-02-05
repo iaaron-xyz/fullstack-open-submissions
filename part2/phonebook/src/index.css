@@ -5,3 +5,10 @@
   margin: 10px;
   font-size: 2rem;
 }
+.error {
+  background: rgb(245, 171, 171);
+  color: red;
+  padding: 10px;
+  margin: 10px;
+  font-size: 2rem;
+}

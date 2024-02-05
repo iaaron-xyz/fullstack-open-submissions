@@ -76,12 +76,17 @@ const App = () => {
             .then((returnedPerson) => {
               setPersons(
                 persons.map((p) => (p.id !== obj.id ? p : returnedPerson))
-              );
+                );
+              // notification of change of number successfully
+              sendNotification('success', `Number changed to ${newNumber} succesfully`);
+              console.log(`Number updated: ${newNumber}`);
+            }).catch(error => {
+              // Error notification
+              sendNotification('error', `Information of ${obj.name} is already been removed from the server.`)
+              // update rendered persons list
+              setPersons(persons.filter(p => p.id !== obj.id));
             });
           
-          // notification of cange of number successfully
-          sendNotification('success', `Number changed to ${newNumber} succesfully`);
-          console.log(`Number updated: ${newNumber}`);
 
           // reset states
           setNewName("");

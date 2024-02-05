@@ -1,6 +1,4 @@
-const Notification = ({notification}) => {
-  console.log(notification);
-  
+const Notification = ({notification}) => {  
   if (notification.message === '') {
     return null;
   }
