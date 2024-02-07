@@ -8,4 +8,9 @@ const getAll = () => {
   return request.then((response) => response.data);
 };
 
-export default { getAll };
+const getCountry = (country) => {
+  const request = axios.get(`${baseUrl}/${country}`);
+  return request.then((response) => response.data);
+};
+
+export default { getAll, getCountry };
