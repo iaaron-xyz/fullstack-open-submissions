@@ -1,0 +1,8 @@
+.error {
+  background: lightpink;
+  color: red;
+  font-size: 1.5rem;
+  font-weight: 900;
+  padding: 10px;
+  margin: 10px;
+}
