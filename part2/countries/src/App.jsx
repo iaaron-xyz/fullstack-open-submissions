@@ -23,7 +23,6 @@ function App() {
     if (countriesMatch.length === 1) {
       console.log("fetching country info...");
       countryService.getCountry(countriesMatch[0]).then((returnedCountry) => {
-        console.log(returnedCountry);
         // setCountryData(returnedCountry);
         setCountryData({
           name: returnedCountry.name.common,
@@ -45,10 +44,14 @@ function App() {
     const matchingCountries = countries.filter((country) =>
       country.toLowerCase().includes(e.target.value.toLowerCase())
     );
-    console.log(matchingCountries);
     // update states
     setCountriesMatch(matchingCountries);
     setCountryName(e.target.value);
+  };
+
+  // Show the specified country
+  const handleShowButton = (country) => {
+    setCountriesMatch([country]);
   };
 
   return (
@@ -62,6 +65,7 @@ function App() {
       <Countries
         countriesMatchList={countriesMatch}
         countryData={countryData}
+        handleShowButton={handleShowButton}
       />
     </>
   );

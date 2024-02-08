@@ -1,10 +1,9 @@
-const Countries = ({ countriesMatchList, countryData }) => {
+const Countries = ({ countriesMatchList, countryData, handleShowButton }) => {
   if (countriesMatchList.length > 10) {
     return <p>Too many matches. Be more specific.</p>;
   }
 
   if (countriesMatchList.length === 1) {
-    console.log(countryData);
     return (
       <div>
         <h2>{countryData.name}</h2>
@@ -20,7 +19,12 @@ const Countries = ({ countriesMatchList, countryData }) => {
   return (
     <ul>
       {countriesMatchList.map((country) => {
-        return <li key={country}>{country}</li>;
+        return (
+          <li key={country}>
+            {country}{" "}
+            <button onClick={() => handleShowButton(country)}>show</button>{" "}
+          </li>
+        );
       })}
     </ul>
   );
