@@ -40,10 +40,9 @@ const getRandChar = () => {
 };
 
 // generate a string with 20 random characters
-const genId = () => {
+const genId = (idLength = 20) => {
   let id = "";
-  let idLength = 20;
-  for (let i = 0; i < 20; i += 1) {
+  for (let i = 0; i < idLength; i += 1) {
     id += getRandChar();
   }
   return id;
@@ -119,7 +118,23 @@ app.post("/api/persons", (request, response) => {
     });
   }
 
-  console.log("Random ID:", genId());
+  // Deal with missing numbers
+  if (!body.number) {
+    return response.status(400).json({
+      error: "Missing number",
+    });
+  }
+
+  // Deal with repeated names
+  const person = persons.find(
+    (p) => p.name.toLocaleLowerCase() === body.name.toLocaleLowerCase()
+  );
+  console.log("Found person:", person);
+  if (person) {
+    return response.status(409).json({
+      error: "The name already exist in the phonebook",
+    });
+  }
 
   // Create new person object
   const newPerson = {
