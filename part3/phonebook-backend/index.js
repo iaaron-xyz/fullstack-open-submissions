@@ -65,6 +65,22 @@ app.get("/api/persons/:id", (request, response) => {
   }
 });
 
+// Delete a phonebook entry
+app.delete("/api/persons/:id", (request, response) => {
+  const id = Number(request.params.id);
+  // number of persons before filtering
+  const numPersonsBefore = persons.length;
+  // filter given entry
+  persons = persons.filter((p) => p.id !== id);
+
+  // entry not found
+  if (numPersonsBefore === persons.length) {
+    return response.status(400).end();
+  }
+  // entry deleted
+  response.status(204).end();
+});
+
 const PORT = 3001;
 app.listen(PORT);
 console.log(`Server  running: http://localhost:${PORT}/`);
