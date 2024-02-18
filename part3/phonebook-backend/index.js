@@ -1,7 +1,6 @@
 const express = require("express");
+const morgan = require("morgan");
 const app = express();
-
-app.use(express.json());
 
 let persons = [
   {
@@ -47,6 +46,18 @@ const genId = (idLength = 20) => {
   }
   return id;
 };
+
+// DEFINE MIDDLEWARE FUNCTIONS & PARAMETERS
+// define content body token for morgan logging
+morgan.token("body", function (req, res) {
+  return JSON.stringify(req.body);
+});
+
+// CALL MIDDLEWARES
+app.use(express.json());
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :body")
+);
 
 // Get phonebook info and date
 app.get("/info", (request, response) => {
@@ -109,7 +120,6 @@ app.delete("/api/persons/:id", (request, response) => {
 app.post("/api/persons", (request, response) => {
   // Get the post body
   const body = request.body;
-  console.log(body);
 
   // Deal with empty names
   if (!body.name) {
@@ -129,7 +139,6 @@ app.post("/api/persons", (request, response) => {
   const person = persons.find(
     (p) => p.name.toLocaleLowerCase() === body.name.toLocaleLowerCase()
   );
-  console.log("Found person:", person);
   if (person) {
     return response.status(409).json({
       error: "The name already exist in the phonebook",
@@ -146,7 +155,6 @@ app.post("/api/persons", (request, response) => {
   // Add new person to phonebook list
   persons = persons.concat(newPerson);
 
-  console.log("Persons list updated", persons);
   response.json(newPerson);
 });
 
