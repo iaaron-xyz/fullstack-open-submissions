@@ -24,14 +24,27 @@ let persons = [
   },
 ];
 
+// Get phonebook info and date
+app.get("/info", (request, response) => {
+  response.send(`
+    <p>
+      Phonebook has info for ${persons.length} people
+    </p>
+    <p>
+      ${new Date()}
+    </p>`);
+});
+
 // Root
 app.get("/", (request, response) => {
-  response.send(
-    `<h1>Persons API</h1></br>
+  response.send(`
+    <h1>Persons API</h1></br>
     <p>
       All persons: <a href="http://localhost:3001/api/persons">/api/persons</a>
-    </p>`
-  );
+    </p>
+    <p>
+      Phonebook info: <a href="http://localhost:3001/info">/info</a>
+    </p>`);
 });
 
 // All persons
