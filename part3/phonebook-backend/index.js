@@ -78,10 +78,10 @@ app.get("/", (request, response) => {
   response.send(`
     <h1>Persons API</h1></br>
     <p>
-      All persons: <a href="http://localhost:3001/api/persons">/api/persons</a>
+      All persons: /api/persons
     </p>
     <p>
-      Phonebook info: <a href="http://localhost:3001/info">/info</a>
+      Phonebook info: /info
     </p>`);
 });
 
@@ -163,5 +163,5 @@ app.post("/api/persons", (request, response) => {
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`Server  running: http://localhost:${PORT}/`);
+  console.log(`Server  running on PORT: ${PORT}`);
 });
