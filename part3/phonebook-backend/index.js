@@ -1,5 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
+
 const app = express();
 
 let persons = [
@@ -58,6 +60,7 @@ app.use(express.json());
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
+app.use(cors());
 
 // Get phonebook info and date
 app.get("/info", (request, response) => {
