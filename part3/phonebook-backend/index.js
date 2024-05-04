@@ -80,7 +80,7 @@ app.delete("/api/persons/:id", (request, response) => {
   response.status(204).end();
 });
 
-// Post a new phonebook entry
+// Create a new phonebook entry
 app.post("/api/persons", (request, response) => {
   // Get the post body
   const body = request.body;
@@ -100,26 +100,25 @@ app.post("/api/persons", (request, response) => {
   }
 
   // Deal with repeated names
-  const person = persons.find(
-    (p) => p.name.toLocaleLowerCase() === body.name.toLocaleLowerCase()
-  );
-  if (person) {
-    return response.status(409).json({
-      error: "The name already exist in the phonebook",
-    });
-  }
+  // const person = persons.find(
+  //   (p) => p.name.toLocaleLowerCase() === body.name.toLocaleLowerCase()
+  // );
+  // if (person) {
+  //   return response.status(409).json({
+  //     error: "The name already exist in the phonebook",
+  //   });
+  // }
 
   // Create new person object
-  const newPerson = {
-    id: genId(),
+  const newPerson = new Person({
     name: body.name,
     number: body.number,
-  };
+  });
 
-  // Add new person to phonebook list
-  persons = persons.concat(newPerson);
-
-  response.json(newPerson);
+  // Save new entry person to the Mongo DB
+  newPerson.save().then((savedPerson) => {
+    response.json(savedPerson);
+  });
 });
 
 const PORT = process.env.PORT || 3001;
