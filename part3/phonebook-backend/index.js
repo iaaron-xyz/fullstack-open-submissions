@@ -1,53 +1,29 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-
 const app = express();
 
-let persons = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
+const mongoose = require("mongoose");
 
-const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+// Get the password from the command line
+console.log(process.argv);
+const password = process.argv[2];
 
-// Get a random integer between 0 and top, top exclusive
-const getRandomInt = (top) => {
-  const topFloored = Math.floor(top);
-  return Math.floor(Math.random() * topFloored);
-};
+// insert the PASS in the url
+const url = `mongodb+srv://iarnfso:${password}@cluster0.wslzans.mongodb.net/phonebook?retryWrites=true&w=majority&appName=Cluster0`;
 
-// get a random character from the chars string
-const getRandChar = () => {
-  return chars.charAt(getRandomInt(chars.length));
-};
+// MongoDB connection parameters
+mongoose.set("strictQuery", false);
+mongoose.connect(url);
 
-// generate a string with 20 random characters
-const genId = (idLength = 20) => {
-  let id = "";
-  for (let i = 0; i < idLength; i += 1) {
-    id += getRandChar();
-  }
-  return id;
-};
+// Base schema for the database
+const personSchema = new mongoose.Schema({
+  name: String,
+  number: String,
+});
+
+// Create model called Person with the schema personSchema
+const Person = mongoose.model("Person", personSchema);
 
 // DEFINE MIDDLEWARE FUNCTIONS & PARAMETERS
 // define content body token for morgan logging
@@ -63,6 +39,18 @@ app.use(
 app.use(cors());
 app.use(express.static("dist"));
 
+// Process the returned object data from MongoDB to more readable UI
+personSchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    // Create an extra field copying the _id field to string format
+    returnedObject.id = returnedObject._id.toString();
+    // delete unnecessary fields in the frontend
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
+
+// REQUESTS
 // Get phonebook info and date
 app.get("/info", (request, response) => {
   response.send(`
@@ -86,9 +74,11 @@ app.get("/", (request, response) => {
     </p>`);
 });
 
-// All persons
+// Get full list of people from the Mongo DB
 app.get("/api/persons", (request, response) => {
-  response.json(persons);
+  Person.find({}).then((people) => {
+    response.json(people);
+  });
 });
 
 // Get one person given its id
