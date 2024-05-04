@@ -3,27 +3,8 @@ const morgan = require("morgan");
 const cors = require("cors");
 const app = express();
 
-const mongoose = require("mongoose");
-
-// Get the password from the command line
-console.log(process.argv);
-const password = process.argv[2];
-
-// insert the PASS in the url
-const url = `mongodb+srv://iarnfso:${password}@cluster0.wslzans.mongodb.net/phonebook?retryWrites=true&w=majority&appName=Cluster0`;
-
-// MongoDB connection parameters
-mongoose.set("strictQuery", false);
-mongoose.connect(url);
-
-// Base schema for the database
-const personSchema = new mongoose.Schema({
-  name: String,
-  number: String,
-});
-
-// Create model called Person with the schema personSchema
-const Person = mongoose.model("Person", personSchema);
+require("dotenv").config();
+const Person = require("./models/person");
 
 // DEFINE MIDDLEWARE FUNCTIONS & PARAMETERS
 // define content body token for morgan logging
@@ -38,17 +19,6 @@ app.use(
 );
 app.use(cors());
 app.use(express.static("dist"));
-
-// Process the returned object data from MongoDB to more readable UI
-personSchema.set("toJSON", {
-  transform: (document, returnedObject) => {
-    // Create an extra field copying the _id field to string format
-    returnedObject.id = returnedObject._id.toString();
-    // delete unnecessary fields in the frontend
-    delete returnedObject._id;
-    delete returnedObject.__v;
-  },
-});
 
 // REQUESTS
 // Get phonebook info and date
