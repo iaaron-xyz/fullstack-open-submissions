@@ -51,17 +51,24 @@ app.get("/api/persons", (request, response) => {
   });
 });
 
-// Get one person given its id
+// GET one person info from the DB
 app.get("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-  const person = persons.find((p) => p.id === id);
+  const id = request.params.id;
 
-  if (person) {
-    response.json(person);
-  } else {
-    response.statusMessage = "Person Not Found";
-    response.status(404).end();
-  }
+  Person.findById(id)
+    .then((person) => {
+      // null retrieve
+      if (person === null) {
+        return response.status(404).end();
+      }
+      // otherwise respond with the person's info
+      console.log(person);
+      response.json(person);
+    })
+    .catch((error) => {
+      console.log(error);
+      response.status(400).send({ error: "wrong id format" });
+    });
 });
 
 // Delete a phonebook entry
