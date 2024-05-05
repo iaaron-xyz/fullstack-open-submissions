@@ -71,22 +71,6 @@ app.get("/api/persons/:id", (request, response) => {
     });
 });
 
-// Delete a phonebook entry
-app.delete("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-  // number of persons before filtering
-  const numPersonsBefore = persons.length;
-  // filter given entry
-  persons = persons.filter((p) => p.id !== id);
-
-  // entry not found
-  if (numPersonsBefore === persons.length) {
-    return response.status(400).end();
-  }
-  // entry deleted
-  response.status(204).end();
-});
-
 // Create a new phonebook entry
 app.post("/api/persons", (request, response) => {
   // Get the post body
@@ -126,6 +110,21 @@ app.post("/api/persons", (request, response) => {
   newPerson.save().then((savedPerson) => {
     response.json(savedPerson);
   });
+});
+
+// DELETE a person from the DB
+app.delete("/api/persons/:id", (request, response) => {
+  const id = request.params.id;
+
+  Person.findByIdAndDelete(id)
+    .then((results) => {
+      console.log(results);
+      response.status(204).end();
+    })
+    .catch((error) => {
+      console.log(error);
+      response.status(400).send({ error: "the id is malformatted" });
+    });
 });
 
 const PORT = process.env.PORT || 3001;
