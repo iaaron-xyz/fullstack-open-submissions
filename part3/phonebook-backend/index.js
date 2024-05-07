@@ -37,13 +37,22 @@ app.use(express.static("dist"));
 // REQUESTS
 // Get phonebook info and date
 app.get("/info", (request, response) => {
-  response.send(`
-    <p>
-      Phonebook has info for ${persons.length} people
-    </p>
-    <p>
-      ${new Date()}
-    </p>`);
+  //  Get the total number of entries
+  Person.countDocuments({})
+    .then((count) => {
+      console.log("Total number of entries:", count);
+      response.send(`
+      <p>
+        Phonebook has info for ${count} people
+      </p>
+      <p>
+        ${new Date()}
+      </p>`);
+    })
+    .catch((err) => {
+      console.error("Error counting total entries:", err);
+      return response.status(404).end();
+    });
 });
 
 // Root
@@ -100,16 +109,6 @@ app.post("/api/persons", (request, response) => {
       error: "Missing number",
     });
   }
-
-  // Deal with repeated names
-  // const person = persons.find(
-  //   (p) => p.name.toLocaleLowerCase() === body.name.toLocaleLowerCase()
-  // );
-  // if (person) {
-  //   return response.status(409).json({
-  //     error: "The name already exist in the phonebook",
-  //   });
-  // }
 
   // Create new person object
   const newPerson = new Person({
