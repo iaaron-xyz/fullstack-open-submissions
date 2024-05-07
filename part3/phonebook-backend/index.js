@@ -138,6 +138,31 @@ app.delete("/api/persons/:id", (request, response) => {
     });
 });
 
+// UPDATE a person entry with a new number
+app.put("/api/persons/:id", (request, response, next) => {
+  const id = request.params.id;
+  const body = request.body;
+
+  // Info from the Frontend
+  const newPersonInfo = {
+    name: body.name,
+    number: body.number,
+  };
+
+  console.log("NEW NUMBER:", newPersonInfo);
+
+  // update to the DB
+  Person.findByIdAndUpdate(id, newPersonInfo, { new: true })
+    .then((updatedPerson) => {
+      console.log("Updating person:", newPersonInfo.name);
+      response.json(updatedPerson);
+    })
+    .then(() => {
+      console.log("Updated successfully");
+    })
+    .catch((error) => next(error));
+});
+
 // MIDDLEWARES TO LOAD LAST
 app.use(errorHandler);
 
