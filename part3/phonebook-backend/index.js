@@ -7,10 +7,24 @@ require("dotenv").config();
 const Person = require("./models/person");
 
 // DEFINE MIDDLEWARE FUNCTIONS & PARAMETERS
+
 // define content body token for morgan logging
 morgan.token("body", function (req, res) {
   return JSON.stringify(req.body);
 });
+
+// Error handler
+const errorHandler = (error, request, response, next) => {
+  // print error message
+  console.log(error);
+
+  // Errors related to casting
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
 
 // CALL MIDDLEWARES
 app.use(express.json());
@@ -52,7 +66,7 @@ app.get("/api/persons", (request, response) => {
 });
 
 // GET one person info from the DB
-app.get("/api/persons/:id", (request, response) => {
+app.get("/api/persons/:id", (request, response, next) => {
   const id = request.params.id;
 
   Person.findById(id)
@@ -65,10 +79,7 @@ app.get("/api/persons/:id", (request, response) => {
       console.log(person);
       response.json(person);
     })
-    .catch((error) => {
-      console.log(error);
-      response.status(400).send({ error: "wrong id format" });
-    });
+    .catch((error) => next(error));
 });
 
 // Create a new phonebook entry
@@ -126,6 +137,9 @@ app.delete("/api/persons/:id", (request, response) => {
       response.status(400).send({ error: "the id is malformatted" });
     });
 });
+
+// MIDDLEWARES TO LOAD LAST
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
