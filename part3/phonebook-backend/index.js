@@ -21,6 +21,9 @@ const errorHandler = (error, request, response, next) => {
   // Errors related to casting
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
+    // Error vlidation
+  } else if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message });
   }
 
   next(error);
@@ -92,7 +95,7 @@ app.get("/api/persons/:id", (request, response, next) => {
 });
 
 // Create a new phonebook entry
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
   // Get the post body
   const body = request.body;
 
@@ -117,9 +120,12 @@ app.post("/api/persons", (request, response) => {
   });
 
   // Save new entry person to the Mongo DB
-  newPerson.save().then((savedPerson) => {
-    response.json(savedPerson);
-  });
+  newPerson
+    .save()
+    .then((savedPerson) => {
+      response.json(savedPerson);
+    })
+    .catch((error) => next(error));
 });
 
 // DELETE a person from the DB

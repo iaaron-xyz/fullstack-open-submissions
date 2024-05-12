@@ -76,7 +76,7 @@ const App = () => {
             .then((returnedPerson) => {
               setPersons(
                 persons.map((p) => (p.id !== obj.id ? p : returnedPerson))
-                );
+              );
               // notification of change of number successfully
               sendNotification('success', `Number changed to ${newNumber} succesfully`);
               console.log(`Number updated: ${newNumber}`);
@@ -86,7 +86,6 @@ const App = () => {
               // update rendered persons list
               setPersons(persons.filter(p => p.id !== obj.id));
             });
-          
 
           // reset states
           setNewName("");
@@ -103,15 +102,24 @@ const App = () => {
     };
 
     // Send new person data to the server
-    personService.create(newPersonObject).then((createdPerson) => {
-      setPersons(persons.concat(createdPerson));
-      // reset states
-      setNewNumber("");
-      setNewName("");
+    personService
+      .create(newPersonObject)
+      .then((createdPerson) => {
+        setPersons(persons.concat(createdPerson));
+        // reset states
+        setNewNumber("");
+        setNewName("");
 
-      // Send success notification
-      sendNotification("success", `${newPersonObject.name} added succesfully`);
-    });
+        // Send success notification
+        sendNotification(
+          "success",
+          `${newPersonObject.name} added succesfully`
+        );
+      })
+      .catch((error) => {
+        console.log("VALIDATION ERROR HERE!", error.response.data.error);
+        sendNotification("error", `${error.response.data.error}`);
+      });
   };
 
   // Delete a person from the server

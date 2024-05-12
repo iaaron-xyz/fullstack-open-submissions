@@ -21,7 +21,10 @@ mongoose
 
 // define the base schema for the database
 const personSchema = new mongoose.Schema({
-  name: String,
+  name: {
+    type: String,
+    minLength: [3, "Name field must be 3 characters long minimum."],
+  },
   number: String,
 });
 
