@@ -25,7 +25,16 @@ const personSchema = new mongoose.Schema({
     type: String,
     minLength: [3, "Name field must be 3 characters long minimum."],
   },
-  number: String,
+  number: {
+    type: String,
+    validate: {
+      validator: function (v) {
+        return /\d{2,3}-\d{6,}/.test(v); // XX-XXXX... or XXX-XXXX...
+      },
+      message: (props) =>
+        `${props.value} is not a valid phone number. Try the format: 000-1234567.`,
+    },
+  },
 });
 
 // Process the returned object data from MongoDB to more readable UI

@@ -146,20 +146,18 @@ app.delete("/api/persons/:id", (request, response) => {
 // UPDATE a person entry with a new number
 app.put("/api/persons/:id", (request, response, next) => {
   const id = request.params.id;
-  const body = request.body;
+  const { name, number } = request.body;
 
-  // Info from the Frontend
-  const newPersonInfo = {
-    name: body.name,
-    number: body.number,
-  };
+  console.log("NEW NUMBER:", number, "FOR:", name);
 
-  console.log("NEW NUMBER:", newPersonInfo);
-
-  // update to the DB
-  Person.findByIdAndUpdate(id, newPersonInfo, { new: true })
+  // update to the DB. Validators ON
+  Person.findByIdAndUpdate(
+    id,
+    { name, number },
+    { new: true, runValidators: true, context: "query" }
+  )
     .then((updatedPerson) => {
-      console.log("Updating person:", newPersonInfo.name);
+      console.log("Updating person:", name);
       response.json(updatedPerson);
     })
     .then(() => {
