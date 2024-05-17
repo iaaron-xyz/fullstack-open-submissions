@@ -53,7 +53,7 @@ if (process.argv.length === 5) {
   });
 
   // save the new note
-  note.save().then((result) => {
+  note.save().then(() => {
     console.log(`added ${name} with number ${number} to phonebook`);
     mongoose.connection.close();
   });

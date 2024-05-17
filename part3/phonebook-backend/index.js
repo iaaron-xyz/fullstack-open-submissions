@@ -9,7 +9,7 @@ const Person = require("./models/person");
 // DEFINE MIDDLEWARE FUNCTIONS & PARAMETERS
 
 // define content body token for morgan logging
-morgan.token("body", function (req, res) {
+morgan.token("body", function (req) {
   return JSON.stringify(req.body);
 });
 

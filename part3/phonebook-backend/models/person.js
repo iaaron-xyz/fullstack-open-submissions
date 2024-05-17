@@ -12,7 +12,7 @@ console.log("Connecting to", url);
 // Connect the the given URL and give feedback
 mongoose
   .connect(url)
-  .then((result) => {
+  .then(() => {
     console.log("Connected to MongoDB");
   })
   .catch((error) => {
