@@ -1,32 +1,43 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
+const cors = require("cors");
+const mongoose = require("mongoose");
 
-let blogs = [
-  {
-    id: 1,
-    title: "The Title",
-    author: "Mister X",
-    url: "www.blogsoffood.com",
-    likes: 13,
-  },
-  {
-    id: 2,
-    title: "Title II",
-    author: "Mister Y",
-    url: "www.cheaptravels.com",
-    likes: 2,
-  },
-];
-
-app.get("/", (request, response) => {
-  response.send("<h1>Blog List Backend</h1>");
+const blogSchema = new mongoose.Schema({
+  title: String,
+  author: String,
+  url: String,
+  likes: Number,
 });
 
+const Blog = mongoose.model("Blog", blogSchema);
+
+const mongoUrl = process.env.MONGODB_URI;
+
+mongoose.connect(mongoUrl);
+
+// Middlewares before routes
+app.use(cors());
+app.use(express.json());
+
+// Get full list of blogs
 app.get("/api/blogs", (request, response) => {
-  response.json(blogs);
+  Blog.find({}).then((blogs) => {
+    response.json(blogs);
+  });
 });
 
-const PORT = 3001;
+app.post("/api/blogs", (request, response) => {
+  console.log(request.body);
+  const blog = new Blog(request.body);
+
+  blog.save().then((result) => {
+    response.status(201).json(result);
+  });
+});
+
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
