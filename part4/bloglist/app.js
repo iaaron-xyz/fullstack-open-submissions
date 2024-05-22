@@ -5,6 +5,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 
 const logger = require("./utils/logger");
+const config = require("./utils/config");
 
 const blogSchema = new mongoose.Schema({
   title: String,
@@ -15,7 +16,7 @@ const blogSchema = new mongoose.Schema({
 
 const Blog = mongoose.model("Blog", blogSchema);
 
-const mongoUrl = process.env.MONGODB_URI;
+const mongoUrl = config.MONGODB_URI;
 
 mongoose.connect(mongoUrl);
 
