@@ -4,6 +4,8 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 
+const logger = require("./utils/logger");
+
 const blogSchema = new mongoose.Schema({
   title: String,
   author: String,
@@ -29,7 +31,7 @@ app.get("/api/blogs", (request, response) => {
 });
 
 app.post("/api/blogs", (request, response) => {
-  console.log(request.body);
+  logger.info("BODY REQUEST:", request.body);
   const blog = new Blog(request.body);
 
   blog.save().then((result) => {
