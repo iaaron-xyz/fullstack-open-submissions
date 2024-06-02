@@ -1,11 +1,17 @@
+const blogs_list = require("./blogs_for_test");
+
 const dummy = (blogs_array) => {
-  console.log(blogs_array);
   return blogs_array.length >= 0 ? 1 : 0;
-  return 1;
 };
 
-console.log("return:", dummy([]));
+const totalLikes = (blogs) => {
+  const reducer = (total, currentItem) => {
+    return total + currentItem.likes;
+  };
+  return blogs.reduce(reducer, 0);
+};
 
 module.exports = {
   dummy,
+  totalLikes,
 };
