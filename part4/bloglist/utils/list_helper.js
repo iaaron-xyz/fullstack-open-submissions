@@ -63,9 +63,36 @@ const mostBlogs = (blogs) => {
   };
 };
 
+// Most Likes
+const mostLikes = (blogs) => {
+  // Empty blogs
+  if (blogs.length === 0) return null;
+
+  // Get the number of likes by author
+  const likesByAuthor = {};
+  for (const blog of blogs) {
+    likesByAuthor[blog["author"]] =
+      (likesByAuthor[blog["author"]] || 0) + blog["likes"];
+  }
+
+  // Get the author's name with max number of likes
+  const maxLikes = Math.max(...Object.values(likesByAuthor));
+  // get the max number of likes
+  const authorWithMaxLikes = Object.keys(likesByAuthor).find(
+    (key) => likesByAuthor[key] === maxLikes
+  );
+
+  // Return in the requested format
+  return {
+    author: authorWithMaxLikes,
+    likes: maxLikes,
+  };
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 };

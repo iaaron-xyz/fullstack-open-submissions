@@ -3,6 +3,7 @@ const assert = require("node:assert");
 const listHelper = require("../utils/list_helper");
 const blogs_list = require("../utils/blogs_for_test");
 
+// List of blogs
 const listWithOneBlog = [
   {
     _id: "5a422aa71b54a676234d17f8",
@@ -41,35 +42,31 @@ const listWithThreeBlogs = [
   },
 ];
 
-// Blog with more likes
-describe("The blog with most likes", () => {
-  test("An empty list of blogs", () => {
-    const result = listHelper.favoriteBlog([]);
+describe("The Author with most Likes", () => {
+  test("Empty list of blogs", () => {
+    const result = listHelper.mostLikes([]);
     assert.deepStrictEqual(result, null);
   });
 
-  test("Only one blog", () => {
-    const result = listHelper.favoriteBlog(listWithOneBlog);
+  test("List with one blog", () => {
+    const result = listHelper.mostLikes(listWithOneBlog);
     assert.deepStrictEqual(result, {
-      title: "Go To Statement Considered Harmful",
       author: "Edsger W. Dijkstra",
       likes: 5,
     });
   });
 
-  test("Blogs with different number of likes", () => {
-    const result = listHelper.favoriteBlog(blogs_list);
+  test("List with many blogs and authors", () => {
+    const result = listHelper.mostLikes(blogs_list);
     assert.deepStrictEqual(result, {
-      title: "Canonical string reduction",
       author: "Edsger W. Dijkstra",
-      likes: 12,
+      likes: 17,
     });
   });
 
-  test("Blogs wit repeated number of likes", () => {
-    const result = listHelper.favoriteBlog(listWithThreeBlogs);
+  test("List with all diferent authors", () => {
+    const result = listHelper.mostLikes(listWithThreeBlogs);
     assert.deepStrictEqual(result, {
-      title: "React patterns",
       author: "Michael Chan",
       likes: 5,
     });
