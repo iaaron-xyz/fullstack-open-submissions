@@ -37,8 +37,35 @@ const favoriteBlog = (blogs) => {
   return favoriteBlog;
 };
 
+// Most blogs
+const mostBlogs = (blogs) => {
+  // empty list of blogs
+  if (blogs.length === 0) {
+    return null;
+  }
+
+  // Get the number of blogs by author
+  const blogsByAuthor = {};
+  for (const blog of blogs) {
+    blogsByAuthor[blog["author"]] = (blogsByAuthor[blog["author"]] || 0) + 1;
+  }
+
+  // Get the max number of blogs and its author name
+  const maxBlogs = Math.max(...Object.values(blogsByAuthor));
+  const authorWithMaxBlogs = Object.keys(blogsByAuthor).find(
+    (key) => blogsByAuthor[key] === maxBlogs
+  );
+
+  // Return equested format
+  return {
+    author: authorWithMaxBlogs,
+    blogs: maxBlogs,
+  };
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
+  mostBlogs,
 };
